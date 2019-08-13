@@ -111,8 +111,8 @@ public class SpiderDetector {
 
                 if (spidersDir.exists() && spidersDir.isDirectory()) {
                     for (File file : spidersDir.listFiles()) {
-                        if (file.isFile())
-                        {
+                        if (file.isFile()
+                        	&& !file.getName().matches(".+old$")) { // omit .old files from previous update runs
                             for (String ip : readPatterns(file)) {
                                 log.debug("Loading {}", ip);
                                 if (!Character.isDigit(ip.charAt(0)))
@@ -158,23 +158,25 @@ public class SpiderDetector {
         File patternsDir = new File(spidersDir, directory);
         if (patternsDir.exists() && patternsDir.isDirectory())
         {
-            for (File file : patternsDir.listFiles())
-            {
-                Set<String> patterns;
-                try
-                {
-                    patterns = readPatterns(file);
-                } catch (IOException ex)
-                {
-                    log.error("Patterns not read from {}:  {}",
-                            file.getPath(), ex.getMessage());
-                    continue;
+            for (File file : patternsDir.listFiles()){
+                if (file.isFile()
+                    	&& !file.getName().matches(".+old$")) { // omit .old files from previous update runs
+                    Set<String> patterns;
+                    try
+                    {
+                        patterns = readPatterns(file);
+                    } catch (IOException ex)
+                    {
+                        log.error("Patterns not read from {}:  {}",
+                                file.getPath(), ex.getMessage());
+                        continue;
+                    }
+                    for (String pattern : patterns)
+                    {
+                        patternList.add(Pattern.compile(pattern));
+                    }
+                    log.info("Loaded pattern file:  {}", file.getPath());
                 }
-                for (String pattern : patterns)
-                {
-                    patternList.add(Pattern.compile(pattern));
-                }
-                log.info("Loaded pattern file:  {}", file.getPath());
             }
         }
         else

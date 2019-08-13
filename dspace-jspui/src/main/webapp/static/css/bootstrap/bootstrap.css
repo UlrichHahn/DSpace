@@ -298,12 +298,14 @@ html {
   font-size: 62.5%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
-
+/** Schrift auf Calibri testhalber geändert; color auf magenta, 
+*also #A50034; A. Groneberg, 26.10.17
+*/
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Verdana;
   font-size: 14px;
   line-height: 1.428571429;
-  color: #333333;
+  color: #A50034;
   background-color: #ffffff;
 }
 

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="HSU-Organisationseinheiten" label="HSU ">
+	<isComposedBy>
+		<node id="ET" label=" ET ">
+			<isComposedBy>
+				<node id="Experimentalphysik u. Materialwissenschaften" label=" Experimentalphysik u. Materialwissenschaften"></node>
+				<node id="Elektrische Messtechnik" label=" Elektrische Messtechnik"></node>
+				<node id="Technische Informatik" label=" Technische Informatik"></node>
+				<node id="Theoretische Elektrotechnik" label=" Theoretische Elektrotechnik"></node>
+				<node id="Elektronik" label=" Elektronik"></node>
+				<node id="Regelungstechnik" label=" Regelungstechnik"></node>
+				<node id="Hochfrequenztechnik" label=" Hochfrequenztechnik"></node>
+				<node id="Allgemeine Nachrichtentechnik" label=" Allgemeine Nachrichtentechnik"></node>
+				<node id="Elektrische Maschinen u. Antriebssysteme" label="Elektrische Maschinen u. Antriebssysteme"></node>
+				<node id="Grundl. der Elektrotechnik" label=" Grundl. der Elektrotechnik"></node>
+				<node id="Leistungselektronik" label=" Leistungselektronik"></node>
+				<node id="Elektrische Energiesysteme" label=" Elektrische Energiesysteme"></node>
+				<node id="Laser Technology" label=" Laser Technology"></node>
+			</isComposedBy>
+		</node>
+		<node id="MB" label=" MB ">
+			<isComposedBy>		
+				<node id="Prozessdatenverarbeitung u. Systemanalyse" label=" Prozessdatenverarbeitung und Systemanalyse"></node>
+				<node id="Automatisierungstechnik" label=" Automatisierungstechnik"></node>
+				<node id="Mess- und Informationstechnik" label=" Mess- u. Informationstechnik"></node>
+				<node id="Maschinenelemente und Technische Logistik" label=" Maschinenelemente und Technische Logistik"></node>
+				<node id="Maschinenelemente und Rechnergestützte Produktentwicklung" label=" Maschinenelemente und Rechnergestützte Produktentwicklung"></node>
+				<node id="Fertigungstechnik" label=" Fertigungstechnik"></node>
+				<node id="Antriebssystemtechnik" label=" Antriebssystemtechnik"></node>
+				<node id="Fahrzeugtechnik" label=" Fahrzeugtechnik"></node>
+				<node id="Mechanik" label=" Mechanik"></node>
+				<node id="Mechatronik" label=" Mechatronik"></node>
+				<node id="Strömungsmechanik" label=" Strömungsmechanik"></node>
+				<node id="Thermodynamik" label=" Thermodynamik"></node>
+				<node id="Verfahrenstechnik, insb. Stofftrennung" label=" Verfahrenstechnik, insb. Stofftrennung"></node>
+				<node id="Werkstoffkunde" label=" Werkstoffkunde"></node>
+				<node id="Funktionale Werkstoffe" label=" Funktionale Werkstoffe"></node>
+				<node id="Energietechnik" label=" Energietechnik"></node>
+				<node id="Angewandte Mathematik" label=" Angewandte Mathematik"></node>
+				<node id="Numerische Mathematik" label=" Numerische Mathematik"></node>
+				<node id="High Performance Computing" label=" High Performance Computing"></node>
+				<node id="Computational Material Design" label=" Computational Material Design"></node>
+				<node id="Mathematik" label=" Mathematik"></node>
+				<node id="Wasserbau" label=" Wasserbau"></node>
+				<node id="Baustoffkunde" label=" Baustoffkunde"></node>
+				<node id="Geotechnik" label=" Geotechnik"></node>
+				<node id="Statik und Dynamik" label=" Statik und Dynamik"></node>
+				<node id="Kurzzeitdynamik" label=" Kurzzeitdynamik"></node>
+			</isComposedBy>
+		</node>
+		<node id="GEISO" label=" GeiSo ">
+			<isComposedBy>	
+				<node id="Erziehungswissenschaft, insb. Ideen- und Diskursgeschichte der Bildung und Erziehung" label=" Erziehungswiss., insb. Ideen- u. Diskursgeschichte der Bildung u. Erziehung"></node>
+				<node id="Erziehungswissenschaft, insb. interkulturelle u. vergleichende Bildungsforschung" label=" Erziehungswissenschaft, insb. interkulturelle und vergleichende Bildungsforschung"></node>
+				<node id="Erziehungswissenschaft, insb. systematische Pädagogik" label=" Erziehungswissenschaft, insb. systematische Pädagogik"></node>
+				<node id="Erziehungswissenschaft, insb. Historische Bildungsforschung" label=" Erziehungswissenschaft, insb. Historische Bildungsforschung"></node>
+				<node id="Erziehungswissenschaft, insb. Bildungs- u. Erziehungstheorie sowie philosophische Grundl." label=" Erziehungswissenschaft, insb. Bildungs- u. Erziehungstheorie sowie philosoph. Grundl."></node>
+				<node id="Erziehungswissenschaft, insb. gesellschaftliche, politische u. rechtliche Grundl. von Bildung u. Erziehung" label=" Erziehungswissenschaft, insb. gesellschaftl., polit. u. rechtl. Grundl. von Bildung u. Erziehung"></node>
+				<node id="Erwachsenenbildung" label=" Erwachsenenbildung"></node>
+				<node id="Weiterbildung und lebenslanges Lernen" label=" Weiterbildung und lebenslanges Lernen"></node>
+				<node id="Berufs- und Betriebspädagogik" label=" Berufs- und Betriebspädagogik"></node>
+				<node id="Berufs- und Arbeitspädagogik" label=" Berufs- und Arbeitspädagogik"></node>	
+				<node id="Soziologie u.b.B. der Mikrosoziologie" label=" Soziologie u.b.B. der Mikrosoziologie"></node>
+				<node id="Allgemeine Soziologie" label=" Allgemeine Soziologie"></node>
+				<node id="Sozialpsychologie" label=" Sozialpsychologie"></node>
+				<node id="Pädagogische Psychologie" label=" Pädagogische Psychologie"></node>
+				<node id="Persönlichkeitspsychologie und Psychologische Diagnostik" label=" Persönlichkeitspsychologie und Psychologische Diagnostik"></node>
+				<node id="Klinische Psychologie" label=" Klinische Psychologie"></node>
+				<node id="Arbeits-, Organisations- und Wirtschaftspsychologie" label=" Arbeits-, Organisations- und Wirtschaftspsychologie"></node>
+				<node id="Allgemeine und Biologische Psychologie" label=" Allgemeine und Biologische Psychologie"></node>
+				<node id="Arbeitsbereich Raum- und Umweltkognition" label=" Arbeitsbereich Raum- und Umweltkognition"></node>
+				<node id="Arbeitsbereich Führungsbegleitung" label=" Arbeitsbereich Führungsbegleitung"></node>
+				<node id="Methoden der empirischen Sozialforschung und Statistik" label=" Methoden der empirischen Sozialforschung und Statistik"></node>
+				<node id="Personalpolitik" label=" Personalpolitik"></node>
+				<node id="Arbeit, Personal und Organisation" label=" Arbeit, Personal und Organisation"></node>
+				<node id="Alte Geschichte" label=" Alte Geschichte"></node>
+				<node id="Mittelalterliche Geschichte" label=" Mittelalterliche Geschichte"></node>
+				<node id="Geschichte der Frühen Neuzeit u.b.B. der Sozial- u. Wirtschaftsgeschichte" label=" Geschichte der Frühen Neuzeit u.b.B. der Sozial- u. Wirtschaftsgeschichte"></node>
+				<node id="Neuere Sozial-, Wirtschafts- u. Technikgeschichte" label=" Neuere Sozial-,  Wirtschafts-  u. Technikgeschichte"></node>
+				<node id="Geschichte des 19. u. 20. Jahrhunderts m.b.B. Mittel- u. Osteuropas" label=" Geschichte des 19. u. 20. Jahrhunderts m.b.B. Mittel- u. Osteuropas"></node>
+				<node id="Neuere Geschichte u.B. der westeuropäischen Geschichte" label=" Neuere Geschichte u.B. der westeuropäischen Geschichte"></node>
+				<node id="Katholische Theologie u.b.B. der Sozialwissenschaften und der Sozialethik" label=" Katholische Theologie u.b.B. der Sozialwissenschaften und der Sozialethik"></node>
+				<node id="Evangelische Theologie u.b.B. der Sozialethik und der Theologiegeschichte" label=" Evangelische Theologie u.b.B. der Sozialethik und der Theologiegeschichte"></node>
+			</isComposedBy>
+		</node>
+		<node id="WISO" label=" WiSo ">
+			<isComposedBy>	
+				<node id="Betriebswirtschaftslehre, insb. Betriebswirtschaftliche Steuerlehre" label=" BWL, insb. Betriebswirtschaftliche Steuerlehre"></node>
+				<node id="Betriebswirtschaftslehre, insb. Rechnungslegung u. Wirtschaftsprüfungswesen" label=" BWL, insb. Rechnungslegung u. Wirtschaftsprüfungswesen"></node>
+				<node id="Allgemeine Betriebswirtschaftslehre und Internationale Finanzierung" label=" Allgemeine Betriebswirtschaftslehre und Internationale Finanzierung"></node>
+				<node id="Betriebswirtschaftslehre, insb. Operations Research" label=" BWL, insb. Operations Research"></node>
+				<node id="Betriebswirtschaftslehre, insb. Wirtschaftsinformatik" label=" BWL, insb. Wirtschaftsinformatik"></node>
+				<node id="Betriebswirtschaftslehre, insb. Controlling und Unternehmensrechnung" label=" BWL, insb. Controlling und Unternehmensrechnung"></node>
+				<node id="Betriebswirtschaftslehre, insb. Leadership and Labour Relations " label=" BWL, insb. Leadership and Labour Relations "></node>
+				<node id="Betriebswirtschaftslehre, insb. Marketing" label=" BWL, insb. Marketing"></node>
+				<node id="Betriebswirtschaftslehre, insb. Technologie- u. Innovationsmanagement" label=" BWL, insb. Technologie- und Innovationsmanagement"></node>
+				<node id="Betriebswirtschaftslehre, insb. Organisationstheorie" label=" BWL, insb. Organisationstheorie"></node>
+				<node id="Betriebswirtschaftslehre, insb. Logistik Management" label=" BWL, insb. Logistik Management"></node>
+				<node id="Betriebswirtschaftslehre, insb. Unternehmensführung und Unternehmenstheorien" label=" BWL, insb. Unternehmensführung und Unternehmenstheorien"></node>
+				<node id="Volkswirtschaftslehre, insb. Konjunktur und Wachstum" label=" VWL, insb. Konjunktur und Wachstum"></node>
+				<node id="Volkswirtschaftslehre, insb. Ordnungsökonomik" label=" VWL, insb. Ordnungsökonomik"></node>
+				<node id="Volkswirtschaftslehre, insb. Behavioral Economics" label=" VWL, insb. Behavioral Economics"></node>
+				<node id="Volkswirtschaftslehre, insb. Internationale Wirtschaftsbeziehungen" label=" VWL, insb. Internationale Wirtschaftsbeziehungen"></node>
+				<node id="Verwaltungswissenschaft" label=" Verwaltungswissenschaft"></node>
+				<node id="Verwaltungswissenschaft, insb. Steuerung öffentlicher Organisation" label=" Verwaltungswissenschaft, insb. Steuerung öffentlicher Organisationen"></node>
+				<node id="Bürgerliches Recht, Handels-, Gesellschafts-, Wirtschaftsrecht und Steuerrecht" label=" Bürgerliches Recht, Handels-, Gesellschafts-, Wirtschafts- und Steuerrecht"></node>
+				<node id="Bürgerliches Recht, Handels-, Wirtschafts- und Arbeitsrecht" label=" Bürgerliches Recht, Handels-, Wirtschafts- und Arbeitsrecht"></node>
+				<node id="Öffentliches Recht und Steuerrecht" label=" Öffentliches Recht und Steuerrecht"></node>
+				<node id="Öffentliches Recht, insb. Öffentliches Wirtschafts- und Umweltrecht" label=" Öffentliches Recht, insb. Öffentliches Wirtschafts- und Umweltrecht"></node>
+				<node id="Öffentliches Recht, insb. Völkerrecht und Europarecht" label=" Öffentliches Recht, insb. Völkerrecht und Europarecht"></node>
+				<node id="Rechnergestützte Statistik" label=" Rechnergestützte Statistik"></node>
+				<node id="Quantitative Methoden der Wirtschaftswissenschaften" label=" Quantitative Methoden der Wirtschaftswiss."></node>
+				<node id="Statistik und Ökonometrie" label=" Statistik und Ökonometrie"></node>
+				<node id="Angewandte Stochastik und Risikomanagement" label=" Angewandte Stochastik und Risikomanagement"></node>
+				<node id="Politikwissenschaft, insb. das politische System der Bundesrepublik Deutschland" label=" Politikwissenschaft, insb. das politische System der Bundesrepublik Deutschland"></node>
+				<node id="Politikwissenschaft, insb. Politische Theorie" label=" Politikwissenschaft, insb. Politische Theorie"></node>
+				<node id="Umwelt-, Klima- und Entwicklungsökonomik" label=" Umwelt-, Klima- und Entwicklungsökonomik"></node>
+				<node id="Bürgerliches Recht und Wirtschaftsrecht (ausschließlich Vertragsgestaltung)" label=" Bürgerliches Recht und Wirtschaftsrecht (ausschl. Vertragsgestaltung)"></node>
+				<node id="Bürgerliches Recht und Wirtschaftsrecht (einschließlich Vergaberecht)" label=" Bürgerliches Recht und Wirtschaftsrecht (einschl. Vergaberecht)"></node>
+			</isComposedBy>
+		</node>
+	</isComposedBy>
+	</node>

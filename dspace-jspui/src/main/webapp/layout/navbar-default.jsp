@@ -136,8 +136,42 @@
 <%
  }
 %>
-          <li id="help-top-menu" class="<%= ( currentPage.endsWith( "/help" ) ? "active" : "" ) %>"><dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, \"help.index\") %>"><fmt:message key="jsp.layout.navbar-default.help"/></dspace:popup></li>
-       </ul>
+
+
+<!-- Link zur Service-Seite eingefuegt als dropdown-Menue; A.G., 08.05.2018  -->
+<!-- fmt:message keys angelegt für Tab "Unsere Services" mit fmt:message key="jsp.layout.navbar-default.help" in Messages.properties; A.G., 08.05.2018  -->
+ <li id="help-top-menu">
+            <a href="/static/openhsuservices.jsp" class="dropdown-toggle" data-toggle="dropdown">Unsere Services <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+				<li class=""> 
+					<a href="/static/openhsuservices.jsp#tabs-1">DSpace-CRIS Tutorial</a></li>
+					</li>
+				<li class= "">
+					<a href="/static/openhsuservices.jsp#tabs-2">Elektronisches Publizieren</a>
+				</li> 
+				<li>
+					<a href="/static/openhsuservices.jsp#tabs-3">Universit&auml;tsbibliografie</a>
+				</li>
+				<li>
+					<a href="/static/openhsuservices.jsp#tabs-4">Publikationsfonds</a>
+				</li>
+				<li>
+					<a href="/static/openhsuservices.jsp#tabs-5">Leitlinien</a>
+				</li>
+				<li>
+					<a href="/static/openhsuservices.jsp#tabs-6">Workshops</a>
+				</li>
+			</ul>
+</li>	
+				
+		<!-- Link zur Service-Seite eingefuegt als dropdown-Menue; A.G., 08.05.2018  -->
+			<!-- fmt:message keys angelegt für Tab "Unsere Services" mit fmt:message key="jsp.layout.navbar-default.help" in Messages.properties; A.G., 08.05.2018  -->
+			
+
+         <%-- 
+		 <li id="help-top-menu" class="<%= ( currentPage.endsWith( "/help" ) ? "active" : "" ) %>"><dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, \"help.index\") %>"><fmt:message key="jsp.layout.navbar-default.help"/></dspace:popup></li>
+       </ul> 
+	   --%>
 
  <%-- if (supportedLocales != null && supportedLocales.length > 1)
      {

@@ -268,8 +268,11 @@ j(document).ready(function() {
 
                 <%-- <strong>Please use this identifier to cite or link to this item:
                 <code><%= HandleManager.getCanonicalForm(handle) %></code></strong>--%>
+		<%-- Please use this... auskommentiert wegen Pilotpartner-Sammlung; A.G., 26.02.2019--%>
+		<%--
                 <div class="well"><fmt:message key="jsp.display-item.identifier"/>
                 <code><%= HandleManager.getCanonicalForm(handle) %></code></div>
+		--%>
        </div>         
 <%
         if (admin_button)  // admin edit button

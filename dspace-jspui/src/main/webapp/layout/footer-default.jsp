@@ -84,8 +84,11 @@
 	            </div> 
             </div>
 			<div class="container-fluid extra-footer row">
-      			<div id="footer_feedback" class="col-sm-4 pull-<%= isRtl ? "right":"left" %>">                                    
-                     <a href="<%= request.getContextPath() %>/feedback"><fmt:message key="jsp.layout.footer-default.feedback"/></a>
+      			<div id="footer_feedback" class="col-sm-4 pull-<%= isRtl ? "right":"left" %>">   
+				<!-- Einbindung Ansprechpartner, Impressum und Datenschutzerklaerung; A:G., 09.05.2018  -->				
+                    <a href="https://ub.hsu-hh.de/ihre-ansprechpartner/"><fmt:message key="jsp.layout.footer-default.contact"/></a> 
+					<a href="https://ub.hsu-hh.de/impressum"><fmt:message key="jsp.layout.footer-default.imprint"/></a> 
+					<a href="https://ub.hsu-hh.de/datenschutzerklaerung"><fmt:message key="jsp.layout.footer-default.privacy"/></a> 
                 </div>
 	           	<div id="designedby" class="col-sm-8 text-<%= isRtl ? "left": "right" %>">
             	 	<fmt:message key="jsp.layout.footer-default.text"/> - 

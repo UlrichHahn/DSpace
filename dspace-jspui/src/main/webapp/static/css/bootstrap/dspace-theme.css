@@ -1,12 +1,18 @@
-/**
+/
+**
  * The contents of this file are subject to the license and copyright
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
  * http://www.dspace.org/license/
  */
+
+/
+**
+* Farbe geändert in .brand h4 auf magenta; A. Groneberg, 26.10.2017
+*/
 .banner img {background-color: #FFFFFF;padding:15px;margin-top:20px;}
-.brand h4 {color: #999999}
+.brand h4 {color: #00716A}
 #communitylist-top-menu a, #userloggedin-top-menu a {padding-top:0.3em;padding-bottom:0.3em;}
 #user-top-menu, #userloggedin-top-menu {margin-right: 15px;}
 footer {padding-top: 1em;}

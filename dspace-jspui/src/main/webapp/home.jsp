@@ -89,6 +89,8 @@
     <%@ include file="components/recent-submissions.jsp" %>
 	</div>
 </div>
+<%-- "Most viewed" und "Most Cited" auskommentiert; A.G., 23.02.2019 
+
 <div class="row">
 	<div class="col-md-4 <%= isRtl ? "pull-right":""%>">
 		<%@ include file="components/most-viewed.jsp" %>	
@@ -98,10 +100,11 @@
 	</div>
 	<div class="col-md-4 <%= isRtl ? "pull-left":""%>">
 	<%= sideNews %>
-	<%-- <%@ include file="discovery/static-tagcloud-facet.jsp" %> --%>
-	<%-- <%@ include file="components/most-cited.jsp" %> --%>
 	</div>
 </div>
+
+--%>
+
 <%
 if (communities != null && communities.length != 0)
 {

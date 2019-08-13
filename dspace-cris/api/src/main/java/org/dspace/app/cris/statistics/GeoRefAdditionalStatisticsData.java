@@ -84,7 +84,10 @@ public class GeoRefAdditionalStatisticsData implements
         }
 
         try {
-            InetAddress ipAddress = InetAddress.getByName(ip);
+            InetAddress ipAddress = InetAddress.getByName(ip); 
+            if(ipAddress.isSiteLocalAddress()) { // UH omit unrouteable addresses
+            	log.info("Skipping geolocation lookup for local address "+ip);
+            }else {
             CityResponse location = getLocationService().city(ipAddress);
             String countryCode = location.getCountry().getIsoCode();
             double latitude = location.getLocation().getLatitude();
@@ -112,8 +115,10 @@ public class GeoRefAdditionalStatisticsData implements
                     }
                 }
             }
-        } catch (IOException | GeoIp2Exception e) {
-            log.warn("Unable to get location of request: " + e.getMessage());
+            }
+//        } catch (IOException | GeoIp2Exception | AddressNotFoundException e) { // UH no symbol AddressNotFoundException
+        } catch (Exception e) {
+            log.warn("UH Unable to get location of request: {} "+e.toString());
         }
     
     }

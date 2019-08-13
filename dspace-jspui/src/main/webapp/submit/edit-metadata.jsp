@@ -96,12 +96,20 @@
                         {
                                 fieldName = fieldName.substring(0, fieldName.length() - 2);
                         }
-                        link = 
+			String controlledVocabularyText="";
+			if ("hsu".equals(vocabulary) ){
+				controlledVocabularyText = "jsp.submit.edit-metadata.controlledvocabulary1";
+			}
+			if ("ddc".equals(vocabulary) ){
+                                controlledVocabularyText = "jsp.submit.edit-metadata.controlledvocabulary2";
+                        }                     
+
+			link = 
                         "<a href='javascript:void(null);' onclick='javascript:popUp(\"" +
                                 contextPath + "/controlledvocabulary/controlledvocabulary.jsp?ID=" +
                                 fieldName + "&amp;vocabulary=" + vocabulary + "\")'>" +
                                         "<span class='controlledVocabularyLink'>" +
-                                                LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.controlledvocabulary") +
+                                                LocaleSupport.getLocalizedMessage(pageContext,  controlledVocabularyText) +
                                         "</span>" +
                         "</a>";
                 }
