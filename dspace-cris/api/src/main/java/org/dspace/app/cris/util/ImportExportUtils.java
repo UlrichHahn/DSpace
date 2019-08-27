@@ -116,6 +116,7 @@ import it.cilea.osd.jdyna.util.AnagraficaUtils;
 import it.cilea.osd.jdyna.value.EmbeddedFile;
 import it.cilea.osd.jdyna.web.Box;
 import it.cilea.osd.jdyna.web.Tab;
+import it.cilea.osd.jdyna.widget.Size;
 import it.cilea.osd.jdyna.widget.WidgetBoolean;
 import it.cilea.osd.jdyna.widget.WidgetCheckRadio;
 import it.cilea.osd.jdyna.widget.WidgetCustomPointer;
@@ -181,6 +182,9 @@ public class ImportExportUtils {
 	 */
 	public static final String PATH_DEFAULT_XML = ConfigurationManager.getProperty(CrisConstants.CFG_MODULE, "file.import.path")
 			+ "cris-data.csv";
+
+    public static final String PATH_EXPORT_EXCEL_DEFAULT = ConfigurationManager.getProperty(CrisConstants.CFG_MODULE, "file.export.path")
+            + "cris-data.xls";
 
 	/**
 	 * Write in the output stream the researcher pages contact data as an excel
@@ -544,6 +548,65 @@ public class ImportExportUtils {
 			}
 		}
 
+		//if forceNestedRemove is false works in append mode
+		boolean forceNestedRemove = ConfigurationManager.getBooleanProperty("cris", "script.bulk.import.force.nested.delete", false);		
+        if (forceNestedRemove)
+        {
+            //foreach bulkchange of a nested object try to clean old nested data
+            for (int i = 1; i <= bulkChanges.size(); i++)
+            {
+                try
+                {
+                    IBulkChange bulkChange = bulkChanges.getChanges(i);
+                    if (bulkChange.isANestedBulkChange())
+                    {
+                        log.info("Try to remove nested " + i + " of " + bulkChanges.size());
+                        IBulkChangeNested bulkChangenested = (IBulkChangeNested) bulkChange;
+                        String crisID = bulkChangenested.getParentCrisID();
+                        String sourceRefParent = bulkChangenested
+                                .getParentSourceRef();
+                        String sourceIDParent = bulkChangenested
+                                .getParentSourceID();
+
+                        ACO object = applicationService
+                                .getEntityByCrisId(crisID, crisObjectClazz);
+                        if (object == null)
+                        {
+                            object = applicationService.getEntityBySourceId(
+                                    sourceRefParent, sourceIDParent,
+                                    crisObjectClazz);
+                        }
+
+                        //try to remove all nested object from the parent object if exists
+                        if (object!=null)
+                        {
+                            for (IContainable cont : metadataNestedLevel)
+                            {
+                                ATNO typo = applicationService
+                                        .findTypoByShortName(
+                                                crisTypeObjectNestedClazz,
+                                                cont.getShortName());
+                                List<ACNO> nesteds = applicationService
+                                        .getNestedObjectsByParentIDAndTypoID(
+                                                object.getId(), typo.getId(),
+                                                crisObjectNestedClazz);
+                                for (ACNO n : nesteds)
+                                {
+                                    applicationService.delete(
+                                            crisObjectNestedClazz, n.getId());
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (RuntimeException e)
+                {
+                    log.error("DELETE NESTED ENTITY - FAILED " + e.getMessage(),
+                            e);
+                }
+            }
+        }
+		
 		//foreach bulkchange (a bulk change is an abstraction of the element that contains the entity in the file e.g row for csv format file)
 		int rows_discarded = 0;
 		int rows_imported = 0;
@@ -701,8 +764,10 @@ public class ImportExportUtils {
         if (object != null)
         {
             boolean remove = false;
-            if (StringUtils.isNotBlank(uuid) || (StringUtils.isNotBlank(sourceRef)
-                    && StringUtils.isNotBlank(sourceID)))
+            //if forceNestedRemove works in append mode
+            boolean forceNestedRemove = ConfigurationManager.getBooleanProperty("cris", "script.bulk.import.force.nested.delete", false);
+            if (!forceNestedRemove && (StringUtils.isNotBlank(uuid) || (StringUtils.isNotBlank(sourceRef)
+                    && StringUtils.isNotBlank(sourceID))))
             {
                 remove = true;
                 update = true;
@@ -1956,7 +2021,7 @@ public class ImportExportUtils {
         for (String pDefHeader : new String[]{
         		"TARGET", "SHORTNAME", "LABEL", "REPEATABLE", "PRIORITY", "HELP",
 				"ACCESS LEVEL", "MANDATORY", "WIDGET", "POINTER CLASS", "RENDERING", "LABEL-SIZE", "FIELD-WIDTH",   
-				"FIELD-HEIGHT", "NEW-LINE", "NONE" }) {
+				"FIELD-HEIGHT", "NEW-LINE","TEXTROWS","TEXTCOLS", "NONE" }) {
         	propertiesdefinitionSheet.addCell(new Label(colIdx, 0, pDefHeader));
         	colIdx++;
         }
@@ -1964,7 +2029,7 @@ public class ImportExportUtils {
         colIdx = 0;
 		for (String pDefHeader : new String[] { "TARGET", "SHORTNAME", "LABEL", "REPEATABLE", "PRIORITY", "HELP",
 				"ACCESS LEVEL", "MANDATORY", "WIDGET", "POINTER CLASS", "ANCESTOR", "RENDERING", "LABEL-SIZE",
-				"FIELD-WIDTH", "FIELD-HEIGHT", "NEW-LINE", "NONE" }) {
+				"FIELD-WIDTH", "FIELD-HEIGHT", "NEW-LINE","TEXTROWS","TEXTCOLS", "NONE" }) {
 			nesteddefinitionSheet.addCell(new Label(colIdx, 0, pDefHeader));
         	colIdx++;
         }
@@ -2069,7 +2134,12 @@ public class ImportExportUtils {
 	            		propertiesdefinitionSheet.addCell(new Label(13, rowIdx, propDef.getFieldMinSize().getRow()+""));
 	            	}
 	            	propertiesdefinitionSheet.addCell(new Label(14, rowIdx, propDef.isNewline()?"y":"n"));
-	            	propertiesdefinitionSheet.addCell(new Label(15, rowIdx, "#"));
+	            	
+	            	propertiesdefinitionSheet.addCell(new Label(15,rowIdx,getWidgetTextSizeRow(propDef.getRendering())));
+	            	
+	            	propertiesdefinitionSheet.addCell(new Label(16,rowIdx,getWidgetTextSizeCol(propDef.getRendering())));
+	            	
+	            	propertiesdefinitionSheet.addCell(new Label(17, rowIdx, "#"));
 	            	
 	            	if (propDef.getRendering() instanceof WidgetCheckRadio) {
 	            		WidgetCheckRadio widget = (WidgetCheckRadio) propDef.getRendering();
@@ -2121,11 +2191,13 @@ public class ImportExportUtils {
 //	            		propertiesdefinitionSheet.addCell(new Label(13, rowIdx, propDef.getFieldMinSize().getRow()+""));
 //	            	}
 	            	propertiesdefinitionSheet.addCell(new Label(14, rowIdx, propDef.isNewline()?"y":"n"));
-	            	propertiesdefinitionSheet.addCell(new Label(15, rowIdx, "#"));
+	            	propertiesdefinitionSheet.addCell(new Label(15,rowIdx,getWidgetTextSizeRow(propDef.getRendering())));
+	            	propertiesdefinitionSheet.addCell(new Label(16,rowIdx,getWidgetTextSizeCol(propDef.getRendering())));	            	
+	            	propertiesdefinitionSheet.addCell(new Label(17, rowIdx, "#"));
 	            	rowIdx++;
 	            	
 					List<? extends PropertiesDefinition> nestedpropDefs = applicationService
-							.likePropertiesDefinitionsByShortName(nestedpropDefTypes.get(oType),
+							.findMaskByShortName(nestedDefTypes.get(oType),
 									propDef.getShortName());
 	                for (PropertiesDefinition npropDef : nestedpropDefs) {
 	    	        	try
@@ -2153,7 +2225,12 @@ public class ImportExportUtils {
 	    	            		nesteddefinitionSheet.addCell(new Label(14, rowNestedIdx, npropDef.getFieldMinSize().getRow()+""));
 	    	            	}
 	    	            	nesteddefinitionSheet.addCell(new Label(15, rowNestedIdx, npropDef.isNewline()?"y":"n"));
-	    	            	nesteddefinitionSheet.addCell(new Label(16, rowNestedIdx, "#"));
+	    	            	
+	    	            	nesteddefinitionSheet.addCell(new Label(16,rowNestedIdx,getWidgetTextSizeRow(npropDef.getRendering())));
+	    	            	
+	    	            	nesteddefinitionSheet.addCell(new Label(17,rowNestedIdx,getWidgetTextSizeCol(npropDef.getRendering())));
+	    	            	
+	    	            	nesteddefinitionSheet.addCell(new Label(18, rowNestedIdx, "#"));
 	    	            	
 	    	            	if (npropDef.getRendering() instanceof WidgetCheckRadio) {
 	    	            		WidgetCheckRadio widget = (WidgetCheckRadio) npropDef.getRendering();
@@ -2334,8 +2411,8 @@ public class ImportExportUtils {
         	utilsdataSheet.addCell(new Label(2, rowUtilsDataDynObjectsIdx, oType));
         	rowUtilsDataDynObjectsIdx++;
         	
-			List<? extends PropertiesDefinition> propDefs = applicationService
-					.likePropertiesDefinitionsByShortName(DynamicPropertiesDefinition.class, oType);
+			List<? extends PropertiesDefinition> propDefs = applicationService.findMaskByShortName(DynamicTypeNestedObject.class,
+                    oType);
             for (PropertiesDefinition propDef : propDefs) {
 	        	try
 	            {
@@ -2360,7 +2437,9 @@ public class ImportExportUtils {
 	            		propertiesdefinitionSheet.addCell(new Label(13, rowIdx, propDef.getFieldMinSize().getRow()+""));
 	            	}
 	            	propertiesdefinitionSheet.addCell(new Label(14, rowIdx, propDef.isNewline()?"y":"n"));
-	            	propertiesdefinitionSheet.addCell(new Label(15, rowIdx, "#"));
+	            	propertiesdefinitionSheet.addCell(new Label(15,rowIdx,getWidgetTextSizeRow(propDef.getRendering())));
+	            	propertiesdefinitionSheet.addCell(new Label(16,rowIdx,getWidgetTextSizeCol(propDef.getRendering())));
+	            	propertiesdefinitionSheet.addCell(new Label(17, rowIdx, "#"));
 	            	
 	            	if (propDef.getRendering() instanceof WidgetCheckRadio) {
 	            		WidgetCheckRadio widget = (WidgetCheckRadio) propDef.getRendering();
@@ -2413,7 +2492,9 @@ public class ImportExportUtils {
 //	            		propertiesdefinitionSheet.addCell(new Label(13, rowIdx, propDef.getFieldMinSize().getRow()+""));
 //	            	}
 	            	propertiesdefinitionSheet.addCell(new Label(14, rowIdx, propDef.isNewline()?"y":"n"));
-	            	propertiesdefinitionSheet.addCell(new Label(15, rowIdx, "#"));
+	            	propertiesdefinitionSheet.addCell(new Label(15,rowIdx,getWidgetTextSizeRow(propDef.getRendering())));
+	            	propertiesdefinitionSheet.addCell(new Label(16,rowIdx,getWidgetTextSizeCol(propDef.getRendering())));
+	            	propertiesdefinitionSheet.addCell(new Label(17, rowIdx, "#"));
 	            	rowIdx++;
 	            	
 					List<? extends PropertiesDefinition> nestedpropDefs = applicationService
@@ -2445,8 +2526,10 @@ public class ImportExportUtils {
 	    	            		nesteddefinitionSheet.addCell(new Label(14, rowNestedIdx, npropDef.getFieldMinSize().getRow()+""));
 	    	            	}
 	    	            	nesteddefinitionSheet.addCell(new Label(15, rowNestedIdx, npropDef.isNewline()?"y":"n"));
-	    	            	nesteddefinitionSheet.addCell(new Label(16, rowNestedIdx, "#"));
-	    	            	
+	    	            	nesteddefinitionSheet.addCell(new Label(16,rowNestedIdx,getWidgetTextSizeRow(npropDef.getRendering())));
+	    	            	nesteddefinitionSheet.addCell(new Label(17,rowNestedIdx,getWidgetTextSizeCol(npropDef.getRendering())));
+	    	            	nesteddefinitionSheet.addCell(new Label(18, rowNestedIdx, "#"));
+
 	    	            	if (npropDef.getRendering() instanceof WidgetCheckRadio) {
 	    	            		WidgetCheckRadio widget = (WidgetCheckRadio) npropDef.getRendering();
 	    	            		String[] cLists = widget.getStaticValues().split("\\|\\|\\|");
@@ -2573,6 +2656,25 @@ public class ImportExportUtils {
 		return "";
 	}
 
+	private static String getWidgetTextSizeCol(AWidget widget) {
+		if (widget instanceof WidgetTesto) {
+			Integer col = ((WidgetTesto) widget).getDimensione().getCol();
+			if(col != null) {
+				return Integer.toString(col);
+			}
+		}
+		return "";
+	}
+	private static String getWidgetTextSizeRow(AWidget widget) {
+		if (widget instanceof WidgetTesto) {
+			Integer row = ((WidgetTesto) widget).getDimensione().getRow();
+			if(row != null) {
+				return Integer.toString(row);
+			}
+		}
+		return "";
+	}	
+	
 	private static String getWidgetDescription(AWidget widget, boolean repeatable) {
 		if (widget instanceof WidgetTesto) return "text";
 		else if (widget instanceof WidgetDate) return "date";

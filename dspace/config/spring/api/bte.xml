@@ -25,6 +25,7 @@
 				<entry key="ciniiXML" value-ref="ciniiFileDataLoader" />
 				<entry key="bibtex" value-ref="bibTeXDataLoader" />
 				<entry key="ris" value-ref="risDataLoader" />
+				<entry key="wosris" value-ref="wosRISDataLoader" />
 				<entry key="endnote" value-ref="endnoteDataLoader" />
 				<entry key="csv" value-ref="csvDataLoader" />
 				<entry key="tsv" value-ref="tsvDataLoader" />
@@ -130,15 +131,44 @@
 	            <entry key="ciniiXML" value-ref="ciniiFileDataLoader"/>
 	            <entry key="bibtex" value-ref="bibTeXDataLoader"/>
 	            <entry key="ris" value-ref="risDataLoader"/>
+	            <entry key="wosris" value-ref="wosRISDataLoader"/>
 	            <entry key="endnote" value-ref="endnoteDataLoader"/>
 	            <entry key="csv" value-ref="csvDataLoader"/>
 	            <entry key="tsv" value-ref="tsvDataLoader"/>
 	            <!-- <entry key="pdf" value-ref="grobidDataLoader" /> -->
+		    <entry key="b3kat" value-ref="ISBNOnlineDataLoaderB3Kat" />
+		    <entry key="loc" value-ref="ISBNOnlineDataLoaderLOC" />
 			</map>
 	    </property>
 	</bean>
 
-	<bean name="org.dspace.submit.lookup.SubmissionLookupOutputGenerator" class="org.dspace.submit.lookup.SubmissionLookupOutputGenerator" scope="prototype"/>
+	<bean name="org.dspace.submit.lookup.SubmissionLookupOutputGenerator" class="org.dspace.submit.lookup.SubmissionLookupOutputGenerator" scope="prototype">
+	<property name="identifiersMap">
+		<map>
+			<entry key="pubmed">
+				<value>pubmedID</value>
+			</entry>
+			<entry key="crossref">
+				<value>doi</value>
+			</entry>
+			<entry key="arxiv">
+				<value>url</value>
+			</entry>
+			<entry key="cinii">
+				<value>ncid</value>
+			</entry>
+			<entry key="scopus">
+				<value>eid</value>
+			</entry>
+			<entry key="wos">
+				<value>isiId</value>
+			</entry>
+			<entry key="ads">
+				<value>adsbibcode</value>
+			</entry>
+		</map>
+	</property>
+    </bean>
 	
 	<!-- Specify here any filters or modifiers to run before the output -->
 	<bean name="phase1LinearWorkflow" class="gr.ekt.bte.core.LinearWorkflow" scope="prototype">
@@ -501,18 +531,57 @@
 				<entry key="PP" value="publisherPlace" />
 				<entry key="LA" value="language" />
 				<entry key="UR" value="url" />
-				<entry key="DO" value="doi" />			</map>
+				<entry key="DO" value="doi" />			
+			</map>
 		</property>
 	</bean>
 
-	<bean id="endnoteDataLoader" class="gr.ekt.bteio.loaders.EndnoteDataLoader">
+	<bean id="wosRISDataLoader" class="org.dspace.submit.extraction.WOSRISDataLoader">
 		<property name="fieldMap">
 			<map>
 				<entry key="TI" value="title" />
+				<entry key="T2" value="journal" />
 				<entry key="AU" value="authors" />
-				<entry key="AB" value="abstract" />
 				<entry key="PY" value="issued" />
-				<entry key="SO" value="journal" />
+				<entry key="SN" value="jissn" />
+				<entry key="PT" value="subtype" />
+				<entry key="M3" value="subtype" />
+				<entry key="AB" value="abstract" />
+				<entry key="VL" value="volume" />
+				<entry key="IS" value="issue" />
+				<entry key="SP" value="firstpage" />
+				<entry key="EP" value="lastpage" />
+				<entry key="KW" value="keywords" />
+				<entry key="PB" value="publisher" />
+				<entry key="PP" value="publisherPlace" />
+				<entry key="LA" value="language" />
+				<entry key="UR" value="url" />
+				<entry key="DO" value="doi" />			
+			</map>
+		</property>
+	</bean>
+
+	<bean id="endnoteDataLoader" class="org.dspace.submit.extraction.EndnoteDataLoader">
+		<property name="fieldMap">
+			<map>
+				<entry key="%T" value="title" />
+				<entry key="%O" value="titleAlternative" />
+				<entry key="%A" value="authors" />
+				<entry key="%E" value="editors" />
+				<entry key="%D" value="issued" />
+				<entry key="%X" value="abstract" />
+				<entry key="%N" value="issue" />
+				<entry key="%V" value="volume" />
+				<entry key="%J" value="journal" />
+				<entry key="%B" value="booktitle" />
+				<entry key="%G" value="language" />
+				<entry key="%K" value="keywords" />
+				<entry key="%I" value="publisher" />
+				<entry key="%C" value="publisherPlace" />
+				<entry key="%R" value="doi" />
+				<entry key="%U" value="url" />
+				<entry key="%0" value="subtype" />
+				<entry key="%7" value="editionnumber" />
 			</map>
 		</property>
 	</bean>
@@ -746,6 +815,50 @@
 
 	
 	
+	<bean id="ISBNOnlineDataLoaderLOC" class="org.dspace.submit.lookup.ISBNOnlineDataLoader">
+	    <property name="searchProvider" value="false" />
+	    <property name="fieldMap" ref="ISBNInputMap" />
+	    <property name="isbnURL" value="http://lx2.loc.gov:210/LCDB" />
+	    <property name="queryFieldName" value="bath.isbn" />
+	</bean>
+
+	<bean id="ISBNOnlineDataLoaderB3Kat" class="org.dspace.submit.lookup.ISBNOnlineDataLoader">
+	    <property name="searchProvider" value="false" />
+	    <property name="fieldMap" ref="ISBNInputMap" />
+	    <property name="isbnURL" value="http://bvbr.bib-bvb.de:5661/bvb01sru" />
+	    <property name="queryFieldName" value="marcxml.isbn" />
+	</bean>
+
+	<bean name="ISBNInputMap" class="java.util.HashMap" scope="prototype">
+		<constructor-arg>
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key="url" value="url" />
+				<entry key="title" value="title" />
+				<entry key="providerType" value="providerType" />
+				<entry key="sourceTitle" value="journal" />
+				<entry key="issued" value="issued" />
+				<entry key="abstract" value="abstract" />
+				<entry key="language" value="language" />
+				<entry key="author" value="authors" />
+				<entry key="orcid" value="orcid" />
+				<entry key="arxiv" value="arxiv" />
+				<entry key="eid" value="eid" />
+				<entry key="doi" value="doi" />
+				<entry key="pmid" value="pubmedID" />
+				<entry key="pmc" value="pubmedcentralID" />
+				<entry key="handle" value="handle" />
+				<entry key="isbn" value="pisbn" />
+				<entry key="issn" value="jissn" />
+				<entry key="uri" value="uri" />
+				<entry key="wosuid" value="isiId" />
+				<entry key="type" value="subtype" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+
+
+
 	<!-- **************************************************************************************************** -->
 	<!-- Output Mapping 																					  -->
 	<!-- **************************************************************************************************** -->
@@ -766,6 +879,7 @@
 				<entry value="journal" key="dc.relation.ispartof" />				
 				<entry value="proceedingsPaper.journal" key="dc.relation.ispartofbook" />				
 				<entry value="title" key="dc.title" />
+				<entry value="titleAlternative" key="dc.title.alternative" />
 				<entry value="issued" key="dc.date.issued" />
 				<entry value="language" key="dc.language.iso" />
 				<entry value="subtype" key="dc.type" />
@@ -809,7 +923,7 @@
 				<entry value="jeissn" key="" />
 				<entry value="eisbn" key="" />
 
-				<entry value="titleAlternative" key="" />
+				
 				<entry value="authorAlternative" key="" />
 				<entry value="ncid" key="" />
 				<entry value="naid" key="" />

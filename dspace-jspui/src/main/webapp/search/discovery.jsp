@@ -226,7 +226,7 @@
 							auto_query: request.term,
 							auto_sort: 'count',
 							auto_type: jQ("#filtertype").val(),
-							location: '<%= searchScope %>'	
+							location: '<%= Utils.addEntities(searchScope) %>'	
 						},
 						success: function( data ) {
 							response( jQ.map( data.autocomplete, function( item ) {
@@ -274,7 +274,7 @@
 </c:set>
 
 <c:set var="searchinKey">
-jsp.search.results.searchin<%= StringUtils.isNotBlank(searchScope) && !StringUtils.contains(searchScope, hdlPrefix)?"."+searchScope:""  %>
+jsp.search.results.searchin<%= StringUtils.isNotBlank(searchScope) && !StringUtils.contains(searchScope, hdlPrefix)?"."+Utils.addEntities(searchScope):""  %>
 </c:set>
 <%
 String dsoName = "";
@@ -295,7 +295,7 @@ if(StringUtils.contains(searchScope, hdlPrefix) ){
     <%-- Controls for a repeat search --%>
 	<div class="discovery-query">
      <form id="update-form" action="simple-search" method="get">
-     							<input name="location" type="hidden" value="<%=searchScope %>" />
+     							<input name="location" type="hidden" value="<%=Utils.addEntities(searchScope) %>" />
                                 <label for="query"><fmt:message key="jsp.search.results.searchfor"/></label>
                                 <input type="text" size="50" id="query" name="query" value="<%= (query==null ? "" : Utils.addEntities(query)) %>"/>
                                 <input type="submit" id="main-query-submit" class="btn btn-primary" value="<fmt:message key="jsp.general.go"/>" />
@@ -471,7 +471,7 @@ else if( qResults != null)
     String baseURL =  request.getContextPath()
                     + "/simple-search?query="
                     + URLEncoder.encode(query,"UTF-8")
-                    + "&amp;location="+ searchScope
+                    + "&amp;location="+ Utils.addEntities(searchScope)
                     + httpFilters
                     + "&amp;sort_by=" + sortedBy
                     + "&amp;order=" + order
@@ -772,17 +772,31 @@ else
 <% } %>
 <dspace:sidebar>
 
+<%
+		DiscoverySearchFilterFacet facetGlobalConf = (DiscoverySearchFilterFacet) request.getAttribute("facetGlobalConfig");
+		String fGlobal = null; 
+		List<FacetResult> facetGlobal = null;
+		boolean showGlobalFacet = false;
+		if(facetGlobalConf!=null) {			
+			fGlobal = facetGlobalConf.getIndexFieldName();
+			if(qResults!=null) {
+				facetGlobal = qResults.getFacetResult(fGlobal);
+				if (facetGlobal != null && facetGlobal.size() > 0) {
+					showGlobalFacet = true;
+				}
+			}
+		}
+%>
 
+<%
+if((showGlobalFacet) || (brefine)) {
+%>
 <h3 class="facets"><fmt:message key="jsp.search.facet.refine" /></h3>
 
 <%
-		DiscoverySearchFilterFacet facetGlobalConf = (DiscoverySearchFilterFacet) request.getAttribute("facetGlobalConfig");
-		if(facetGlobalConf!=null) {
-		    String fGlobal = facetGlobalConf.getIndexFieldName();
-			if(qResults!=null) {
-		    List<FacetResult> facetGlobal = qResults.getFacetResult(fGlobal);
+}
+		if(showGlobalFacet) {
 		    String fkeyGlobal = "jsp.search.facet.refine."+fGlobal;
-		    if (facetGlobal != null && facetGlobal.size() > 0) {
 		    %>
 		    <div id="globalFacet" class="facetsBox">
 		    <div id="facet_<%= fkeyGlobal %>" class="panel panel-primary">
@@ -805,8 +819,6 @@ else
 		    }
 		    %></ul></div>
 		    </div><%
-			} 
-			}
 		}
 %>
 
@@ -847,7 +859,7 @@ else
 	        %><li class="list-group-item"><span class="badge"><%= fvalue.getCount() %></span> <a href="<%= request.getContextPath()
                 + "/simple-search?query="
                 + URLEncoder.encode(query,"UTF-8")
-				+ "&amp;location=" + searchScope
+				+ "&amp;location=" + Utils.addEntities(searchScope)
                 + "&amp;sort_by=" + sortedBy
                 + "&amp;order=" + order
                 + "&amp;rpp=" + rpp
@@ -872,7 +884,7 @@ else
 	        <a class="pull-left" href="<%= request.getContextPath()
                 + "/simple-search?query="
                 + URLEncoder.encode(query,"UTF-8")
-				+ "&amp;location=" + searchScope
+				+ "&amp;location=" + Utils.addEntities(searchScope)
                 + "&amp;sort_by=" + sortedBy
                 + "&amp;order=" + order
                 + "&amp;rpp=" + rpp
@@ -884,7 +896,7 @@ else
             <a href="<%= request.getContextPath()
                 + "/simple-search?query="
                 + URLEncoder.encode(query,"UTF-8")
-				+ "&amp;location=" + searchScope
+				+ "&amp;location=" + Utils.addEntities(searchScope)
                 + "&amp;sort_by=" + sortedBy
                 + "&amp;order=" + order
                 + "&amp;rpp=" + rpp

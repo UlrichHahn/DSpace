@@ -7,6 +7,7 @@
  */
 package org.dspace.app.cris.model.orcid;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,30 +43,33 @@ import org.dspace.app.cris.service.RelationPreferenceService;
 import org.dspace.app.cris.util.Researcher;
 import org.dspace.app.cris.util.ResearcherPageUtils;
 import org.dspace.authority.orcid.OrcidService;
-import org.dspace.authority.orcid.jaxb.address.AddressCtype;
-import org.dspace.authority.orcid.jaxb.address.Addresses;
-import org.dspace.authority.orcid.jaxb.common.ExternalId;
-import org.dspace.authority.orcid.jaxb.common.Visibility;
-import org.dspace.authority.orcid.jaxb.email.EmailCtype;
-import org.dspace.authority.orcid.jaxb.email.Emails;
-import org.dspace.authority.orcid.jaxb.keyword.KeywordCtype;
-import org.dspace.authority.orcid.jaxb.keyword.Keywords;
-import org.dspace.authority.orcid.jaxb.othername.OtherNameCtype;
-import org.dspace.authority.orcid.jaxb.othername.OtherNames;
-import org.dspace.authority.orcid.jaxb.person.Person;
-import org.dspace.authority.orcid.jaxb.person.externalidentifier.ExternalIdentifiers;
-import org.dspace.authority.orcid.jaxb.personaldetails.BiographyCtype;
-import org.dspace.authority.orcid.jaxb.personaldetails.NameCtype.CreditName;
-import org.dspace.authority.orcid.jaxb.personaldetails.NameCtype.FamilyName;
-import org.dspace.authority.orcid.jaxb.personaldetails.NameCtype.GivenNames;
-import org.dspace.authority.orcid.jaxb.researcherurl.ResearcherUrlCtype;
-import org.dspace.authority.orcid.jaxb.researcherurl.ResearcherUrls;
+import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.content.Item;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
+import org.dspace.core.Context;
 import org.dspace.discovery.SearchServiceException;
+import org.dspace.eperson.EPerson;
 import org.dspace.utils.DSpace;
+import org.orcid.jaxb.model.common_v2.CreditName;
+import org.orcid.jaxb.model.common_v2.ExternalId;
+import org.orcid.jaxb.model.common_v2.Visibility;
+import org.orcid.jaxb.model.record_v2.AddressType;
+import org.orcid.jaxb.model.record_v2.Addresses;
+import org.orcid.jaxb.model.record_v2.BiographyType;
+import org.orcid.jaxb.model.record_v2.EmailType;
+import org.orcid.jaxb.model.record_v2.Emails;
+import org.orcid.jaxb.model.record_v2.ExternalIdentifiers;
+import org.orcid.jaxb.model.record_v2.KeywordType;
+import org.orcid.jaxb.model.record_v2.Keywords;
+import org.orcid.jaxb.model.record_v2.NameType.FamilyName;
+import org.orcid.jaxb.model.record_v2.NameType.GivenNames;
+import org.orcid.jaxb.model.record_v2.OtherNameType;
+import org.orcid.jaxb.model.record_v2.OtherNames;
+import org.orcid.jaxb.model.record_v2.Person;
+import org.orcid.jaxb.model.record_v2.ResearcherUrlType;
+import org.orcid.jaxb.model.record_v2.ResearcherUrls;
 
 import it.cilea.osd.jdyna.value.BooleanValue;
 
@@ -879,7 +883,7 @@ public class OrcidPreferencesUtils
 
                 if (mapMetadata.containsKey("biography"))
                 {
-                    BiographyCtype biography = orcidProfile.getBiography();
+                    BiographyType biography = orcidProfile.getBiography();
                     if (biography != null && checkSyncAllowed(crisObject, mapMetadata.get("biography"), propsToReplace))
                     {
                         ResearcherPageUtils.buildTextValue(crisObject,
@@ -896,7 +900,7 @@ public class OrcidPreferencesUtils
                     Emails emails = orcidProfile.getEmails();
                     if (emails != null)
                     {
-                        for (EmailCtype email : emails.getEmail())
+                        for (EmailType email : emails.getEmail())
                         {
                             if (email.isVerified())
                             {
@@ -968,7 +972,7 @@ public class OrcidPreferencesUtils
                     if (otherNames != null)
                     {
                     	boolean found = false;
-                        for (OtherNameCtype otherName : otherNames.getOtherName())
+                        for (OtherNameType otherName : otherNames.getOtherName())
                         {
                             String value = otherName.getContent();
                             if (StringUtils.isNotBlank(value))
@@ -979,7 +983,7 @@ public class OrcidPreferencesUtils
                         }
                         
                         if (found && checkSyncAllowed(crisObject, mapMetadata.get("other-names"), propsToReplace)) {
-                        	for (OtherNameCtype otherName : otherNames.getOtherName())
+                        	for (OtherNameType otherName : otherNames.getOtherName())
                             {
                                 String value = otherName.getContent();
                                 if (StringUtils.isNotBlank(value))
@@ -1002,7 +1006,7 @@ public class OrcidPreferencesUtils
                     if (addresses != null)
                     {
                     	boolean found = false;
-                        for (AddressCtype address : addresses.getAddress())
+                        for (AddressType address : addresses.getAddress())
                         {
                             String country = address.getCountry();
                             if (StringUtils.isNotBlank(country))
@@ -1013,7 +1017,7 @@ public class OrcidPreferencesUtils
                         }
                         
                         if (found && checkSyncAllowed(crisObject, mapMetadata.get("iso-3166-country"), propsToReplace)) {
-                        	for (AddressCtype address : addresses.getAddress())
+                        	for (AddressType address : addresses.getAddress())
                             {
                                 String country = address.getCountry();
                                 if (StringUtils.isNotBlank(country))
@@ -1036,7 +1040,7 @@ public class OrcidPreferencesUtils
                     Keywords keywords = orcidProfile.getKeywords();
                     if (keywords != null && keywords.getKeyword() != null && keywords.getKeyword().size() > 0 && checkSyncAllowed(crisObject, mapMetadata.get("keywords"), propsToReplace))
                     {
-                        for (KeywordCtype key : keywords.getKeyword())
+                        for (KeywordType key : keywords.getKeyword())
                         {
                             ResearcherPageUtils.buildTextValue(crisObject,
                                     key.getContent(),
@@ -1053,7 +1057,7 @@ public class OrcidPreferencesUtils
                     ResearcherUrls urls = orcidProfile.getResearcherUrls();
                     if (urls != null && urls.getResearcherUrl() != null && urls.getResearcherUrl().size() > 0 && checkSyncAllowed(crisObject, mapMetadata.get("researcher-urls"), propsToReplace))
                     {
-                        for (ResearcherUrlCtype url : urls.getResearcherUrl())
+                        for (ResearcherUrlType url : urls.getResearcherUrl())
                         {
                             ResearcherPageUtils.buildLinkValue(crisObject,
                                     url.getUrlName(), url.getUrl().getValue(),
@@ -1238,4 +1242,50 @@ public class OrcidPreferencesUtils
 	{
 	    return ResearcherPageUtils.getStringValue(researcher, tokenName);
 	}
+	
+    public static boolean disconnectOrcidbyResearcherPage(Context context, ResearcherPage rp)
+    {
+        String orcid = ResearcherPageUtils.getStringValue(rp, "orcid");
+        
+        if(StringUtils.isNotBlank(rp.getSourceRef())) {
+            if("orcid".equals(rp.getSourceRef())) {
+                rp.setSourceID(null);
+                rp.setSourceRef(null);
+            }
+        }
+        
+        if (StringUtils.isNotBlank(orcid))
+        {
+            // clear orcid
+            List<RPProperty> rppp = rp.getAnagrafica4view()
+                    .get("orcid");
+            if (rppp != null && !rppp.isEmpty())
+            {
+                for (RPProperty rpppp : rppp)
+                {
+                    rp.removeProprieta(rpppp);
+                }
+            }
+            
+            // clear tokens
+            setTokens(rp, null);
+            
+            // clear orcid info on eperson
+            try
+            {
+                EPerson eperson = EPerson.find(context, rp.getEpersonID());
+                eperson.clearMetadata("eperson", "orcid", null, null);
+                eperson.clearMetadata("eperson", "orcid", "accesstoken", null);
+                eperson.update();
+                context.commit();
+            }
+            catch (SQLException | AuthorizeException e)
+            {
+                log.error(e.getMessage());
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

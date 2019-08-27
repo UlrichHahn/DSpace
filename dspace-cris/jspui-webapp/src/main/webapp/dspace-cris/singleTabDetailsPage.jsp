@@ -88,7 +88,7 @@
         												</a>
       												</h4>
     										</div>
-										    <div id="collapseOne${holder.shortName}" class="panel-collapse collapse in">
+										    <div id="collapseOne${holder.shortName}" class="panel-collapse collapse<c:if test="${holder.collapsed==false}"> in</c:if>">
 												<div class="panel-body">
 											      <c:set var="hideLabel">${fn:length(propertiesDefinitionsInHolder[holder.shortName]) le 1}</c:set>
 													<c:forEach
@@ -124,11 +124,14 @@
 																			<fmt:message key="jsp.jdyna.nestedloading" />
 																<span class="spandatabind nestedinfo">${tipologiaDaVisualizzare.real.id}</span>
 																<span id="nested_${tipologiaDaVisualizzare.real.id}_totalHit" class="spandatabind">0</span>
-																<span id="nested_${tipologiaDaVisualizzare.real.id}_limit" class="spandatabind">5</span>
+																<span id="nested_${tipologiaDaVisualizzare.real.id}_limit" class="spandatabind">20</span>
 																<span id="nested_${tipologiaDaVisualizzare.real.id}_pageCurrent" class="spandatabind">0</span>
 																<span id="nested_${tipologiaDaVisualizzare.real.id}_editmode" class="spandatabind">false</span>
 																<span id="nested_${tipologiaDaVisualizzare.real.id}_externalJSP" class="spandatabind">${tipologiaDaVisualizzare.externalJSP}</span>
 																</div>
+																<c:if test="${tipologiaDaVisualizzare.real.newline}">
+																	<div class="dynaClear">&nbsp;</div>
+																</c:if>
 														</c:if>
 														<c:if
 															test="${dyna:instanceOf(tipologiaDaVisualizzare,'it.cilea.osd.jdyna.model.ADecoratorPropertiesDefinition')}">

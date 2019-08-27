@@ -59,7 +59,7 @@
     // Can the logged in user edit
     Boolean bEdit = (Boolean)request.getAttribute("canEdit");
     boolean canEdit = (bEdit == null ? false : bEdit.booleanValue());
-    
+    boolean canDisconnectOrcid = ConfigurationManager.getBooleanProperty("cris","rp.orcid.candisconnect");
     // Get the current page, minus query string
     String currentPage = UIUtil.getOriginalURL(request);
     int c = currentPage.indexOf( '?' );
@@ -71,6 +71,7 @@
     boolean networkModuleEnabled = ConfigurationManager.getBooleanProperty(NetworkPlugin.CFG_MODULE,"network.enabled");
     boolean changeStatusAdmin = ConfigurationManager.getBooleanProperty("cris","rp.changestatus.admin");
     boolean claimEnabled = ConfigurationManager.getBooleanProperty("cris","rp.claim.enabled");
+    String fieldFeed = ConfigurationManager.getProperty("cris","rp.feed.field");
 %>
 <c:set var="admin" scope="request"><%=isAdmin%></c:set>
 <c:set var="statusAdmin" scope="request"><%=changeStatusAdmin%></c:set>
@@ -78,6 +79,8 @@
 <c:set var="req" value="${pageContext.request}" />
 <c:set var="baseURL" value="${fn:replace(req.requestURL, fn:substring(req.requestURI, 0, fn:length(req.requestURI)), req.contextPath)}" />
 <c:set var="metaprofilename"><c:choose><c:when test="${!empty entity.preferredName.value}">${entity.preferredName.value}</c:when><c:otherwise>${entity.fullName}</c:otherwise></c:choose></c:set>
+<c:set var="fieldRSS" scope="request"><%= fieldFeed %></c:set>
+<c:set var="canDisconnectOrcid" scope="page"><%= canDisconnectOrcid %></c:set>
 
 <c:set var="dspace.cris.navbar" scope="request">
 
@@ -137,6 +140,14 @@
 									postfunction();
 								},
 								error : function(data) {
+								},
+								complete: function(data) {
+									j('#' + id).dataTable({
+												searching: false, 
+												info: false, 
+												paging: false,
+												ordering : true
+									});
 								}
 							});		
 						};
@@ -144,7 +155,6 @@
 							j('#nested_'+id+'_next').click(
 									function() {
 								    	ajaxFunction(parseInt(j('#nested_'+id+"_pageCurrent").html())+1);
-										
 							});
 							j('#nested_'+id+'_prev').click(
 									function() {
@@ -158,6 +168,14 @@
 						postfunction();
 					},
 					error : function(data) {
+					},
+					complete: function(data) {
+						j('#' + id).dataTable({
+									searching: false, 
+									info: false, 
+									paging: false,
+									ordering : true
+						});
 					}
 				});
 			});
@@ -217,6 +235,31 @@
 						else{
 							j('#selfclaimrp-result').append('<span id="label-success" class="label label-success"><fmt:message key="jsp.cris.detail.selfclaimrp.success"><fmt:param value="${baseURL}/cris/rp/${entity.crisID}"/></fmt:message></span>');
 							
+						}
+					}
+				});
+				
+			});
+			
+			j('#disconnect-orcid-rp').on('click', function(){
+				j('#label-success').remove();
+				j('#label-error').remove();				
+				j.ajax({
+					url: "<%= request.getContextPath() %>/json/orcid/disconnect",
+					data: {
+						"crisid": '${entity.crisID}'
+					},
+					success : function(data) {
+						send = data.result;
+						if(send==-1){
+							j('#selfclaimrp-result').append('<span id="label-error" class="label label-warning"><fmt:message key="jsp.cris.detail.disconnectorcidrp.error-1"><fmt:param value="${baseURL}/cris/rp/${entity.crisID}"/></fmt:message></span>');	
+						}
+						else{
+							j('#selfclaimrp-result').append('<span id="label-success" class="label label-warning"><fmt:message key="jsp.cris.detail.disconnectorcidrp.success"><fmt:param value="${baseURL}/cris/rp/${entity.crisID}"/></fmt:message></span>');
+							j('#orciddisconnect-modal').modal('show');
+							setTimeout(function () { // wait 3 seconds and reload
+								    window.location.reload(true);
+								  }, 3000);
 						}
 					}
 				});
@@ -305,7 +348,7 @@
                 				<a class="btn btn-default" href="<%= request.getContextPath() %>/cris/tools/subscription/unsubscribe?uuid=${researcher.uuid}"><i class="fa fa-stop"></i> <fmt:message key="jsp.cris.detail.link.email.alert.remove" /> </a>
         					</c:otherwise>
 					</c:choose>
-	  				<a class="btn btn-default" href="<%= request.getContextPath() %>/open-search?query=author_authority:${authority}&amp;format=rss"><i class="fa fa-rss"></i> <fmt:message key="jsp.cris.detail.link.rssfeed" /></a>
+	  				<a class="btn btn-default" href="<%= request.getContextPath() %>/open-search?query=${fieldRSS}:${authority}&amp;format=rss"><i class="fa fa-rss"></i> <fmt:message key="jsp.cris.detail.link.rssfeed" /></a>
 				</div>
 				<c:if test="${(researcher_page_menu || canEdit) && !empty researcher}">
 				<div class="btn-group">
@@ -336,7 +379,12 @@
 							</c:if>
 							<li>
 								<a href="${root}/cris/tools/rp/rebindItemsToRP.htm?id=${researcher.id}&operation=list"><i class="fa fa-search"></i> <fmt:message key="jsp.authority-claim.choice.list.items"/></a>
-							</li>							
+							</li>
+							<c:if test="${!empty anagraficaObject.anagrafica4view['orcid'] && canDisconnectOrcid}">
+							<li>
+								<a href="#" id="disconnect-orcid-rp"><i class="fa fa-search"></i> <fmt:message key="jsp.authority-orcid.disconnect"/></a>
+							</li>
+							</c:if>							
 						</ul>
 					</div> 
 					
@@ -492,6 +540,9 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div id="orciddisconnect-modal" style="display:none">
+	<!-- empty -->
+</div>
 </dspace:layout>
 </c:otherwise>
 </c:choose>
